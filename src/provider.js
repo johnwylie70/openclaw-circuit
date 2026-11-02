@@ -1,8 +1,11 @@
 import { CircuitError, listModels } from "./client.js";
 import { PROVIDER_ID, runPairing } from "./pair.js";
 
-/** What to assume when a model's server can't say. Only a loaded model reports its context. */
-export const ASSUMED_CONTEXT = 32768;
+/**
+ * What to assume when a model's server can't say. Only a loaded model reports its context.
+ * Too low is unusable: OpenClaw's own prompt is about 40k tokens, and at 32k every turn runs compacted.
+ */
+export const ASSUMED_CONTEXT = 64000;
 const MAX_REPLY_TOKENS = 8192;
 const NO_COST = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 };
 

@@ -67,9 +67,9 @@ OpenClaw needs to know a model's context to decide when to compact a conversatio
 | `contextWindows` in this plugin's settings | Always wins |
 | The model's server | Only while the model is loaded |
 | `defaultContextWindow` in this plugin's settings | Otherwise |
-| 32,768 tokens | Otherwise |
+| 64,000 tokens | Otherwise |
 
-So a model that is not loaded yet may show as 33k and compact early. If you know its size, set it:
+So a model that is not loaded yet may show as 64k even if it can hold more. If its server allows less than that, the oldest part of a long conversation can be cut off. If you know its size, set it:
 
 ```json5
 // openclaw.json
