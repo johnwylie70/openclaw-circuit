@@ -88,6 +88,32 @@ So a model that is not loaded yet may show as 64k even if it can hold more. If i
 
 `maxTokens` sets the longest reply (8,192 tokens by default).
 
+## When a computer is short of memory
+
+The computer holding the model decides what happens:
+
+- **The model isn't running:** it starts, and the first reply takes longer.
+- **Other models are in the way:** they stop to make room. Circuitry shows a message saying which, so you can adjust.
+- **It can't make enough room:** nothing stops, and OpenClaw gets a message such as `Big needs about 19 GB but Mac has 6 GB free. Most memory is in use by Chrome (8 GB).`
+
+To try another computer when that happens, list a fallback:
+
+```json5
+// openclaw.json
+{
+  agents: {
+    defaults: {
+      model: {
+        primary: "circuit/Qwen3.8-27B-4bit",
+        fallbacks: ["circuit/pc/qwen3.8:27b"]
+      }
+    }
+  }
+}
+```
+
+Fallbacks apply to your default model. A model you pick for one chat with `/model` runs as chosen, and OpenClaw tells you if it can't.
+
 ## Troubleshooting
 
 | You see | What to do |
@@ -97,7 +123,7 @@ So a model that is not loaded yet may show as 64k even if it can hold more. If i
 | `This Circuit has no screen to show a pairing code on` | Pair with a Circuit running from its menu bar or tray, not the command-line one |
 | `That pairing has ended` | It timed out after 5 minutes, took 5 wrong codes, or someone pressed **Not me**. Start again |
 | `No models found` | Add `--refresh`, restart the gateway, or check the Circuit shares a model |
-| `The model is not answering` | The computer named in the message is off or its model server has stopped. An MLX model must be started once from Circuitry on that Mac |
+| `The model is not answering` | The computer named in the message is off, or its model server isn't reachable |
 | Updating the plugin on Windows says `EPERM … symlink` | The update is saved. Restart the gateway from a terminal on that PC, not over SSH |
 
 ## Limits
