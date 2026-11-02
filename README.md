@@ -23,7 +23,7 @@ To reach your whole cluster, pair with the **lead** Circuit: the one you add mac
 openclaw plugins install git:github.com/johnwylie70/openclaw-circuit
 ```
 
-OpenClaw warns that the source is outside ClawHub. Add `--force` if you run it without a terminal to answer.
+OpenClaw warns that the source is outside ClawHub and asks you to accept what the plugin does. Without a terminal to answer, add `--force --accept-capabilities`.
 
 ## Pair
 
