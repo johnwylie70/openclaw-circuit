@@ -1,0 +1,20 @@
+{
+  "name": "openclaw-circuit",
+  "version": "1.0.0",
+  "description": "Use the models your Circuit shares from OpenClaw, including every computer in your Circuit cluster.",
+  "type": "module",
+  "license": "SEE LICENSE IN https://www.circuitry.dev/terms",
+  "homepage": "https://www.circuitry.dev/docs/agent-chat/openclaw",
+  "repository": { "type": "git", "url": "git+https://github.com/johnwylie70/openclaw-circuit.git" },
+  "scripts": { "test": "node --test \"test/*.test.js\"" },
+  "files": ["index.js", "src/**", "openclaw.plugin.json", "README.md", "LICENSE"],
+  "openclaw": {
+    "extensions": ["./index.js"],
+    "providers": ["circuit"],
+    "install": { "minHostVersion": ">=2026.10.9" },
+    "compat": { "pluginApi": ">=2026.10.9", "minGatewayVersion": "2026.10.9" },
+    "build": { "openclawVersion": "2026.10.9", "pluginSdkVersion": "2026.10.9" }
+  },
+  "peerDependencies": { "openclaw": ">=2026.10.9" },
+  "peerDependenciesMeta": { "openclaw": { "optional": true } }
+}

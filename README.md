@@ -1,0 +1,119 @@
+# Circuit for OpenClaw
+
+Use the models your [Circuit](https://www.circuitry.dev/download) shares from [OpenClaw](https://docs.openclaw.ai): models on the computer running OpenClaw, on your other computers, and on every computer in your Circuit cluster.
+
+Your Mac has MLX and Ollama models and your PC has a GPU? Pair OpenClaw with one Circuit and both computers' models appear in OpenClaw, under one provider.
+
+```
+OpenClaw ──> your lead Circuit ──┬──> its own models
+                                 └──> Circuit on your PC ──> the PC's models
+```
+
+## What you need
+
+- OpenClaw 2026.10.9 or newer
+- Circuit with app pairing, on the computer you pair with. It updates itself; if pairing says it is too old, choose the update in its menu.
+- Both computers on the same network, with Circuit allowed through the firewall
+
+To reach your whole cluster, pair with the **lead** Circuit: the one you add machines from under **Cluster…** in the Circuit menu. A computer in a cluster only knows its own models.
+
+## Install
+
+```
+openclaw plugins install git:github.com/johnwylie70/openclaw-circuit
+```
+
+OpenClaw warns that the source is outside ClawHub. Add `--force` if you run it without a terminal to answer.
+
+## Pair
+
+```
+openclaw models auth login --provider circuit
+```
+
+1. Type your Circuit's address, the **IP Address** in its menu, such as `192.168.1.20`.
+2. A window opens on that computer, naming the app and the computer asking, with a 6-digit code.
+3. Type the code into OpenClaw. If you did not start this, press **Not me** in the window.
+
+Then restart the gateway so it picks up the models:
+
+```
+openclaw gateway restart
+```
+
+## Use a model
+
+```
+openclaw models list --provider circuit --refresh
+openclaw models set circuit/gemma4:latest
+```
+
+A model on the computer running your Circuit is `circuit/<model>`. A model on another computer in the cluster is `circuit/<computer>/<model>`, such as `circuit/pc/qwen3.8:27b`.
+
+## What OpenClaw can reach
+
+The key from pairing reaches two things: the list of shared models, and chats with them. It cannot reach files, terminals or code on your computers, and it cannot run anything there. It is kept in OpenClaw's protected store, not in `openclaw.json`.
+
+To remove access, choose **Cluster…** in the Circuit menu and press **Remove** next to OpenClaw. The key stops working at once. Pair again to get a new one; that replaces the old key.
+
+Your messages travel between your computers over plain HTTP on your own network, as all Circuit traffic on a network does. Use a network you trust.
+
+## How much context a model gets
+
+OpenClaw needs to know a model's context to decide when to compact a conversation.
+
+| Where the number comes from | When |
+|---|---|
+| `contextWindows` in this plugin's settings | Always wins |
+| The model's server | Only while the model is loaded |
+| `defaultContextWindow` in this plugin's settings | Otherwise |
+| 32,768 tokens | Otherwise |
+
+So a model that is not loaded yet may show as 33k and compact early. If you know its size, set it:
+
+```json5
+// openclaw.json
+{
+  plugins: {
+    entries: {
+      circuit: {
+        config: {
+          contextWindows: { "pc/qwen3.8:27b": 160000 }
+        }
+      }
+    }
+  }
+}
+```
+
+`maxTokens` sets the longest reply (8,192 tokens by default).
+
+## Troubleshooting
+
+| You see | What to do |
+|---|---|
+| `Nothing answered at …` | Check Circuit is running there, and that its firewall allows port 3030 |
+| `That Circuit is too old to pair with apps` | Update Circuit from its menu |
+| `This Circuit has no screen to show a pairing code on` | Pair with a Circuit running from its menu bar or tray, not the command-line one |
+| `That pairing has ended` | It timed out after 5 minutes, took 5 wrong codes, or someone pressed **Not me**. Start again |
+| `No models found` | Add `--refresh`, restart the gateway, or check the Circuit shares a model |
+| `The model is not answering` | The computer named in the message is off or its model server has stopped. An MLX model must be started once from Circuitry on that Mac |
+| Updating the plugin on Windows says `EPERM … symlink` | The update is saved. Restart the gateway from a terminal on that PC, not over SSH |
+
+## Limits
+
+- Text models only: image models aren't listed yet.
+- Your computers have to be on the same network. Home Circuit, for reaching a Circuit from outside it, isn't supported.
+- OpenClaw reaches your cluster through the lead Circuit, so a model on the PC stops answering while the lead computer sleeps, even with OpenClaw on that same PC.
+
+## Develop
+
+```
+npm test
+```
+
+No build step and no dependencies: `index.js` and `src/` are what OpenClaw loads. The Circuit's side of pairing is described in [the docs](https://www.circuitry.dev/docs/agent-chat/openclaw).
+
+## Licence
+
+Licensed under the [Circuitry terms](https://www.circuitry.dev/terms). See [LICENSE](LICENSE).

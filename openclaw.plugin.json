@@ -1,0 +1,77 @@
+{
+  "id": "circuit",
+  "name": "Circuit",
+  "description": "Use the models your Circuit shares, including every computer in your Circuit cluster.",
+  "version": "1.0.0",
+  "categories": [
+    "models"
+  ],
+  "activation": {
+    "onStartup": true,
+    "providers": [
+      "circuit"
+    ],
+    "capabilities": [
+      "provider"
+    ]
+  },
+  "providers": [
+    "circuit"
+  ],
+  "setup": {
+    "providers": [
+      {
+        "id": "circuit",
+        "authMethods": [
+          "pair"
+        ]
+      }
+    ]
+  },
+  "providerAuthChoices": [
+    {
+      "provider": "circuit",
+      "method": "pair",
+      "choiceId": "circuit-pair",
+      "choiceLabel": "Pair with Circuit",
+      "choiceHint": "Type the code your Circuit shows",
+      "groupId": "circuit",
+      "groupLabel": "Circuit"
+    }
+  ],
+  "uiHints": {
+    "defaultContextWindow": {
+      "label": "Context for a model that isn't loaded",
+      "help": "Tokens to assume when a model's server can't say. Only a loaded model reports its real context."
+    },
+    "contextWindows": {
+      "label": "Context per model",
+      "help": "Tokens per model id, such as pc/qwen3.8:27b. Wins over what the server reports."
+    },
+    "maxTokens": {
+      "label": "Longest reply",
+      "help": "The most tokens one reply may use."
+    }
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "defaultContextWindow": {
+        "type": "integer",
+        "minimum": 512
+      },
+      "contextWindows": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "integer",
+          "minimum": 512
+        }
+      },
+      "maxTokens": {
+        "type": "integer",
+        "minimum": 1
+      }
+    }
+  }
+}
