@@ -2,6 +2,8 @@
 
 Use the models your [Circuit](https://www.circuitry.dev/download) shares from [OpenClaw](https://docs.openclaw.ai): models on the computer running OpenClaw, on your other computers, and on every computer in your Circuit cluster.
 
+**Running OpenClaw inside Circuitry? You don't need this plugin.** Circuitry gives it your Circuit's models automatically: install Circuit on each computer and put them in a cluster. This plugin is for OpenClaw running on its own.
+
 Your Mac has MLX and Ollama models and your PC has a GPU? Pair OpenClaw with one Circuit and both computers' models appear in OpenClaw, under one provider.
 
 ```
